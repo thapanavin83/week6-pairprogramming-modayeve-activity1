@@ -20,7 +20,7 @@ const signupUser = async (req, res) => {
     // create a token
     const token = generateToken(user._id);
 
-    res.status(201).json({ email, token });
+    res.status(201).json({ name: user.name, email, token });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -31,17 +31,14 @@ const signupUser = async (req, res) => {
 // @access  Public
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
+
   try {
     const user = await User.login(email, password);
 
-    if (user) {
-      // create a token
-      const token = generateToken(user._id);
-      res.status(200).json({ email, token });
-    } else {
-      res.status(400);
-      throw new Error("Invalid credentials");
-    }
+    // create a token
+    const token = generateToken(user._id);
+
+    res.status(200).json({ name: user.name, email, token });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -63,4 +60,3 @@ module.exports = {
   loginUser,
   getMe,
 };
-
